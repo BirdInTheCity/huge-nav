@@ -1,0 +1,40 @@
+
+.feature-image {
+    height: 240px;
+    width: 100%;
+
+    background: url(/images/background-image.jpg) no-repeat center center;
+    background-size: cover;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feature-headline {
+    font-size: 44px;
+    font-family:HUGEAvantGardeBold;
+    font-height: 48px;
+    margin: 50px 0;
+}
+
+
+@media only screen and (min-width: 768px) {
+
+    .feature-image {
+        height: 640px;
+        width: 100%;
+
+        background: url(/images/background-image.jpg) no-repeat center center;
+        background-size: cover;
+    }
+
+    .feature-headline {
+        text-align: center;
+        font-family:HUGEAvantGardeBold;
+        font-size: 120px;
+        font-height: 132px;
+    }
+
+
+}

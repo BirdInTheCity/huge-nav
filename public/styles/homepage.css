@@ -1,0 +1,20 @@
+#homepage-copy {
+    font-family: Galaxie;
+
+    color: #000000;
+    padding: 0 48px;
+    max-width: 968px;
+    margin: 0 auto;
+
+
+}
+#homepage-copy p {
+    text-align: justify;
+
+}
+
+@media only screen and (min-width: 768px) {
+    #homepage-copy {
+        padding: 60px 48px;
+    }
+}
