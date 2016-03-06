@@ -2,6 +2,8 @@
     width: 100%;
     background: #ec008c;
     font-size: 0;
+    z-index: 1000;
+    position: absolute;
 }
 
 .huge-logo {
@@ -18,41 +20,58 @@
     margin: 0;
     padding: 0;
     vertical-align: top;
+
+    overflow: hidden;
+
 }
 
 
 .huge-menu-item {
-    display: inline-block;
-    height: 72px;
-    line-height: 72px;
+
+
     font-family: HUGEAvantGardeBold;
+    font-size: 21px;
+    display: flex;
+    justify-content:center;
+    align-content:center;
+    flex-direction: column;
+    float: left;
+    /*height: 72px;*/
+    /*//padding: 24px 24px;*/
+    /*float: left;*/
+    cursor: pointer;
+    /*display: inline-block;*/
+    height:72px
+;
+    /*height: 72px;
+    line-height: 72px;
     list-style-type: none;
     padding: 0 24px;
-    cursor: pointer;
-    overflow: hidden;
+    overflow: hidden;*/
 }
 
-.huge-menu-item:hover, .huge-menu-item:focus {
+.huge-menu-item a{
+    padding: 24px;
+}
+
+.huge-menu-item.selected {
     color: #ec008c;
     background-color: #ffffff;
-}
-
-.huge-menu-item.open-menu {
-    //overflow: visible;
 }
 
 
 
 .huge-sub-menu {
     display: none;
+    position: absolute;
+    background: #fff;
+    padding: 12px 0;
 }
 
 .huge-sub-menu.open-menu {
     display: block;
-    position: absolute;
-    padding: 12px 0;
-    background: #fff;
 }
+
 
 .huge-sub-menu-item {
     font-family: Galaxie;
@@ -63,14 +82,48 @@
     padding: 0 24px;
 }
 
+.huge-sub-menu-item:hover, .huge-sub-menu-item:focus {
+    background-color: #eee;
+    color: #ec008c;
+}
+
+
+
+.huge-sub-menu-item a {
+    padding: 0;
+}
+
+
+
 
 
 @media only screen and (min-width: 768px) {
     .huge-menu-item {
-        height: 72px;
-        font-size: 21px;
-        line-height: 72px;
-        padding: 0 24px;
+        /*height: 72px;*/
+        /*font-size: 21px;*/
+        /*line-height: 72px;*/
+        /*padding: 0 24px;*/
     }
 
+}
+
+
+.menu-background {
+    position:fixed;
+    padding:0;
+    margin:0;
+
+    top:0;
+    left:0;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: rgba(0,0,0,.5);
+    z-index: 999;
+    display: none;
+}
+
+.menu-background.visible {
+    display: inherit;
 }
