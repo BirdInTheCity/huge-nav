@@ -1,8 +1,14 @@
+.page-wrap {
+    width: 100%;
+    float: right;
+}
+
+
 #homepage-copy {
     font-family: Galaxie;
 
     color: #000000;
-    padding: 0 48px;
+    padding: 0 24px;
     max-width: 968px;
     margin: 0 auto;
 

@@ -85,7 +85,7 @@ p {
 }
 
 .hide-mobile {
-    display:none;
+    display:none !important;
 }
 
 
@@ -93,10 +93,16 @@ p {
 
 
     .hide-desktop {
-        display: none;
+        display: none !important;
     }
 
     .hide-mobile {
         display: inherit;
     }
+}
+
+@keyframes swift-out {
+    0%  {top: 20%;}
+    50%  {top: 69%;}
+    100% {top: 20%;}
 }
