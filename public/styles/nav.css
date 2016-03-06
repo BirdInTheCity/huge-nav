@@ -1,5 +1,7 @@
 #main-navigation {
     background: #ec008c;
+    position: relative;
+    z-index: 70;
     font-size: 0;
     width: 100%;
     height: 72px;
@@ -26,7 +28,14 @@
     transform: translate(0px,0px);
 }
 
+#main-navigation + * {
+    transform: none;
+    transition: transform 0.5s cubic-bezier(.55,0,.1,1);
+}
 
+#main-navigation.open + * {
+    transform: translate(248px, 0px);
+}
 
 
 .huge-logo {
@@ -38,10 +47,27 @@
     display: block;
 }
 
+#main-navigation .huge-menu-item:first-child {
+    display: flex;
+    align-items: center;
+    background-color: #ec008c;
+    padding: 12px 0px;
+    margin-bottom: 12px;
+    height: 72px;
+}
 
 
+#main-navigation .huge-menu-item {
+    line-height: 48px;
+    padding: 0 24px;
+}
 
-.huge-menu-item {
+#main-navigation .huge-menu-item.selected {
+    color: #ec008c;
+    background-color: #eeeeee;
+}
+
+#main-navigation .huge-menu-item {
     display: block;
 
     font-family: HUGEAvantGardeBold;
@@ -96,7 +122,7 @@
 
 
 .menu-background {
-    position:absolute;
+    position: fixed;
     padding:0;
     margin:0;
 
@@ -110,25 +136,15 @@
 
     background-color: rgba(0,0,0,.5);
     z-index: 60;
-    display: none;
+    transition: opacity 0.25s linear;
+    opacity: 0;
 
 }
 
 .menu-background.visible {
-    /*opacity: 1;*/
-    display: inherit;
+    opacity: 1;
 }
 
-
-
-/*#main-navigation.open #nav-button {
-    display: inherit;
-    left: 0;
-}
-
-#nav-button.open {
-    right: 0;
-}*/
 
 #main-navigation #nav-button{
     position: absolute;
@@ -168,28 +184,41 @@
         height: inherit;
         background-color: inherit;
         color: inherit;
-        /*float: left;
-        overflow: hidden;
-        white-space: nowrap;*/
+        /*overflow: hidden;*/
+        white-space: nowrap;
     }
 
 
-    .huge-logo {
+    #main-navigation .huge-logo {
         display: inline-block;
     }
 
 
-    .huge-menu-item {
+    #main-navigation .huge-menu-item{
         display: flex;
+        align-items: center;
         justify-content:center;
         align-content:center;
         flex-direction: column;
         float: left;
         width: inherit;
         height:72px;
+        padding: 0;
     }
 
-    .huge-menu-item a{
-        padding: 24px;
+    .huge-menu-item:first-child{
+        /*flex-direction: inherit;*/
+    }
+
+    #main-navigation .huge-menu-item a{
+        padding: 0 24px;
+    }
+
+    #main-navigation .huge-sub-menu {
+        margin-top: 12px;
+    }
+
+    #main-navigation .huge-sub-menu-item a {
+        padding: 0px;
     }
 }

@@ -129,12 +129,11 @@
             var menuList = document.createElement('ul');
             menuList.id = 'huge-menu';
 
-            bg = createMenuBackground();
+            createMenuBackground();
 
 
             //hugeNav.appendChild(menuList);
             mainHeader.appendChild(menuList);
-            document.getElementById('main-body').appendChild(bg);
 
             var logo = createLogo();
             menuList.appendChild(logo);
@@ -147,17 +146,25 @@
     }
 
     function createLogo(){
+        var div  = document.createElement('div');
+        div.style.paddingLeft = '24px';
+        div.style.paddingRight = '48px';
+        div.style.display = 'flex';
+        div.style.alignItems = 'center';
+
         var img = document.createElement('img');
         img.src = 'images/HUGE-white.png';
         img.height = 24;
         img.width = 60;
         img.alt = 'Huge';
-        img.style.marginLeft = '24px';
-        img.style.marginRight = '48px';
+        //img.style.marginLeft = '24px';
+        //img.style.marginRight = '48px';
+
+        div.appendChild(img);
 
         var menuItem = document.createElement('li');
         menuItem.classList.add('huge-menu-item');
-        menuItem.appendChild(img);
+        menuItem.appendChild(div);
 
         return menuItem;
     }
@@ -166,6 +173,7 @@
         var menuItem = document.createElement('li');
 
         menuItem.classList.add('huge-menu-item');
+        //menuItem.innerText = label;
         var link = createMenuLink(label);
         menuItem.appendChild(link);
 
@@ -268,10 +276,26 @@
 
 
     function createMenuBackground (){
+        var parent = document.getElementById('main-body');
         var bg = document.createElement('div');
         bg.classList.add('menu-background');
 
+        bg.addEventListener('webkitTransitionEnd', function() {
+            if (!bg.classList.contains('visible')){
+                parent.removeChild(bg);
+            }
+        });
+
+        bg.addEventListener('click', function(){
+            menu.selected = null;
+            menu.openHorizontalNav = false;
+        });
+
+
+
         bg.show = function(){
+            parent.appendChild(bg);
+            window.getComputedStyle(bg).height;
             bg.classList.add('visible');
         };
 
@@ -279,9 +303,7 @@
             bg.classList.remove('visible');
         };
 
-        bg.addEventListener('click', function(){
-            menu.selected = null;
-        });
+
 
         document.addEventListener('MENU_ITEM_SELECTED', function(evt){
             if (evt.detail.selected){
@@ -290,7 +312,14 @@
                 bg.hide();
             }
         });
-        return bg;
+
+        document.addEventListener('NAV_VERTICAL_STATE_CHANGE', function(evt){
+            if (evt.detail.open){
+                bg.show();
+            } else {
+                bg.hide();
+            }
+        });
     }
 
 
