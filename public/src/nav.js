@@ -161,6 +161,10 @@
                 menuItem = createMenuItem(menuItem.label, menuItem.url, menuItem.items);
                 menuList.appendChild(menuItem);
             });
+
+            var copyright = createCopyright();
+            menuList.appendChild(copyright);
+
         }
     }
 
@@ -173,8 +177,9 @@
 
         var img = document.createElement('img');
         img.src = 'images/HUGE-white.png';
-        img.height = 24;
-        img.width = 60;
+        img.id = 'huge-logo';
+        //img.height = 24;
+        //img.width = 60;
         img.alt = 'Huge';
 
         div.appendChild(img);
@@ -331,6 +336,14 @@
         mLink.innerText = label;
         mLink.href = url;
         return mLink;
+    }
+
+    function createCopyright(){
+        var cr = document.createElement('li');
+        cr.classList.add('hide-desktop');
+        cr.classList.add('copyright');
+        cr.innerText = '© 2014 Huge. All Rights Reserved.';
+        return cr;
     }
 
 
