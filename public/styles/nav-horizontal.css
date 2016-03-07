@@ -1,0 +1,68 @@
+
+.horizontal-nav {
+    display: inline-block;
+}
+
+.horizontal-nav  #huge-menu {
+    transform: none;
+    height: inherit;
+    background-color: inherit;
+    color: inherit;
+    white-space: nowrap;
+}
+
+
+.horizontal-nav .huge-logo {
+    display: inline-block;
+}
+
+
+.horizontal-nav .huge-menu-item{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    align-content:center;
+    flex-direction: column;
+    float: left;
+    width: inherit;
+    height:72px;
+    padding: 0;
+
+}
+
+.horizontal-nav .huge-menu-item.selected {
+    background-color: #ffffff;
+}
+
+
+.horizontal-nav .huge-menu-item a{
+    padding: 0 24px;
+    color: #ffffff;
+}
+
+.horizontal-nav .huge-menu-item.selected a{
+    color: #ec008c;
+}
+
+.horizontal-nav .huge-sub-menu {
+    display: none;
+    margin-top: 12px;
+    padding: 12px 0;
+    position: absolute;
+}
+
+.horizontal-nav .huge-sub-menu.open-menu{
+    display: block;
+}
+
+.horizontal-nav .huge-sub-menu-item a {
+    padding: 0px;
+}
+
+.horizontal-nav .huge-menu-item.selected .huge-sub-menu-item a{
+    color: #000000;
+}
+
+.horizontal-nav .huge-menu-item.selected .huge-sub-menu-item:hover a{
+    color: #ec008c;
+}

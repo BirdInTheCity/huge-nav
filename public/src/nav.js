@@ -85,14 +85,32 @@
         getJSON('/api/nav.json').then(function (data) {
             createMenu(data.items);
             enableVerticalNavButtons();
+
+            enableChangeListener();
+
+            var widthCheck = window.matchMedia("(min-width: 768px)");
+            widthCheck.addListener(widthChange);
+            widthChange(widthCheck);
+
+
         }, function (status) {
             alert('Ruh-Roh: ' + status);
         });
+    }
 
-        var widthCheck = window.matchMedia("(min-width: 768px)");
-        widthCheck.addListener(widthChange);
-        widthChange(widthCheck);
-
+    function enableChangeListener(){
+        console.log('setup');
+        var nav = document.getElementById('main-navigation');
+        document.addEventListener('NAV_TRANSITION_CHANGE', function(evt){
+            console.log('change event');
+            if (evt.detail.horizontal){
+                nav.classList.add('horizontal-nav');
+                nav.classList.remove('vertical-nav');
+            } else {
+                nav.classList.add('vertical-nav');
+                nav.classList.remove('horizontal-nav');
+            }
+        });
     }
 
     function enableVerticalNavButtons(){
