@@ -67,6 +67,10 @@ body {
     margin: 0;
 }
 
+a, a:hover, a:visited {
+    text-decoration: none;
+}
+
 
 
 p {
@@ -100,10 +104,4 @@ p {
     .hide-mobile {
         display: inherit;
     }
-}
-
-@keyframes swift-out {
-    0%  {top: 20%;}
-    50%  {top: 69%;}
-    100% {top: 20%;}
 }

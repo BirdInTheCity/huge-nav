@@ -157,8 +157,6 @@
         img.height = 24;
         img.width = 60;
         img.alt = 'Huge';
-        //img.style.marginLeft = '24px';
-        //img.style.marginRight = '48px';
 
         div.appendChild(img);
 
@@ -173,20 +171,30 @@
         var menuItem = document.createElement('li');
 
         menuItem.classList.add('huge-menu-item');
-        //menuItem.innerText = label;
-        var link = createMenuLink(label);
+
+        var link = createMenuLink(label, url);
+        if (subItems.length){
+            var chevron = createChevron();
+            link.appendChild(chevron);
+        }
         menuItem.appendChild(link);
+
 
 
         menuItem.update = function(evt){
             var self = menuItem;
 
             if (evt.detail.selected === self){
+                // Menu was selected to open
+
                 self.classList.add('open-menu');
                 if (self.subMenu){
                     self.subMenu.classList.add('open-menu');
                 }
+
             } else {
+                // Menu was NOT selected to open
+
                 self.classList.remove('open-menu');
                 self.classList.remove('selected');
 
@@ -202,20 +210,25 @@
             switch (evt.type){
                 case 'mouseover' :
                     self.classList.add('selected');
-                    if (menu.selected){
+                    if (menu.selected  && menu.isHorizontal){
                         menu.selected = self;
                     }
 
                     break;
 
                 case 'mouseout' :
-                    if (menu.selected !== self){
+                    if (menu.selected !== self || !menu.isHorizontal){
                         self.classList.remove('selected');
                     }
                     break;
 
                 case 'click' :
-                    menu.selected = self;
+                    if (subItems.length){
+                        menu.selected = self;
+                    } else {
+                        menu.selected = null;
+                        menu.openHorizontalNav = false;
+                    }
                     break;
 
             }
@@ -238,6 +251,22 @@
 
     }
 
+    function createChevron(){
+        var div  = document.createElement('div');
+        div.classList.add('hide-desktop');
+        div.classList.add('chevron');
+
+        var img = document.createElement('img');
+        img.src = 'images/chevron.svg';
+        img.height = 48;
+        img.width = 48;
+        img.alt = 'open menu';
+
+        div.appendChild(img);
+
+        return div;
+    }
+
 
     function createSubMenu(subData){
         if (subData.length){
@@ -255,21 +284,30 @@
     function createSubMenuItem (label, url){
         var menuItem = document.createElement('li');
         menuItem.classList.add('huge-sub-menu-item');
-        menuItem.linkURL = url;
-        //menuItem.addEventListener('click', menuItemHandler);
 
-        var menuItemLink = document.createElement('a');
-        menuItemLink.innerText = label;
+        var menuItemLink = createMenuLink(label, url);
         menuItem.appendChild(menuItemLink);
+        menuItem.addEventListener('mouseover', function(){
+            if (! menu.isHorizontal){
+                event.stopPropagation();
+            }
+        });
+
+        menuItem.addEventListener('click', function(){
+            menu.openHorizontalNav = false;
+            menu.selected = null;
+            event.stopPropagation();
+        });
 
         return menuItem;
     }
 
 
 
-    function createMenuLink(label){
+    function createMenuLink(label, url){
         var mLink = document.createElement('a');
         mLink.innerText = label;
+        mLink.href = url;
         return mLink;
     }
 

@@ -6,9 +6,9 @@
     width: 100%;
     height: 72px;
     vertical-align: top;
-    /*height: 100%;*/
-
 }
+
+
 
 #main-navigation #huge-menu {
     display: inline-block;
@@ -24,28 +24,25 @@
     transition: transform 0.5s cubic-bezier(.55,0,.1,1);
 }
 
+
+
 #main-navigation.open #huge-menu {
     transform: translate(0px,0px);
 }
+
+
 
 #main-navigation + * {
     transform: none;
     transition: transform 0.5s cubic-bezier(.55,0,.1,1);
 }
 
+
+
 #main-navigation.open + * {
     transform: translate(275px, 0px);
 }
 
-
-.huge-logo {
-    display: block;
-    padding: 24px 48px 24px 24px;
-}
-
-.huge-logo a{
-    display: block;
-}
 
 #main-navigation .huge-menu-item:first-child {
     display: flex;
@@ -59,12 +56,23 @@
 
 #main-navigation .huge-menu-item {
     line-height: 48px;
-    /*padding: 0 24px;*/
     padding: 0;
 }
 
 #main-navigation .huge-menu-item a{
-    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 0 24px;
+}
+
+#main-navigation .huge-menu-item .chevron {
+    transform: rotate(0deg);
+    transition: transform 0.35s cubic-bezier(.55,0,.1,1);
+}
+
+#main-navigation .huge-menu-item.open-menu .chevron {
+    transform: rotate(180deg);
 }
 
 #main-navigation .huge-menu-item.selected {
@@ -82,9 +90,6 @@
     width: 275px;
 }
 
-.huge-menu-item a{
-    /*padding: 24px;*/
-}
 
 .huge-menu-item.selected {
     color: #ec008c;
@@ -94,13 +99,17 @@
 
 
 .huge-sub-menu {
-    display: none;
+    display: block;
+    overflow: hidden;
     background: #fff;
     padding: 0;
+    max-height: 0;
+    transition: max-height 0.75s cubic-bezier(.55,0,.1,1);
 }
 
 .huge-sub-menu.open-menu {
     display: block;
+    max-height: 400px;
 }
 
 
@@ -113,7 +122,8 @@
     padding: 0 24px;
 }
 
-.huge-sub-menu-item:hover, .huge-sub-menu-item:focus {
+.huge-sub-menu-item:hover, .huge-sub-menu-item:focus,
+.huge-sub-menu-item:hover a, .huge-sub-menu-item a:focus{
     background-color: #eee;
     color: #ec008c;
 }
@@ -121,6 +131,8 @@
 
 #main-navigation .huge-sub-menu-item a {
     padding: 0;
+    text-decoration: none;
+
 }
 
 
@@ -187,7 +199,6 @@
         height: inherit;
         background-color: inherit;
         color: inherit;
-        /*overflow: hidden;*/
         white-space: nowrap;
     }
 
@@ -214,17 +225,19 @@
     }
 
 
-    .huge-menu-item:first-child{
-        /*flex-direction: inherit;*/
-    }
-
     #main-navigation .huge-menu-item a{
         padding: 0 24px;
     }
 
     #main-navigation .huge-sub-menu {
+        display: none;
         margin-top: 12px;
+        padding: 12px 0;
         position: absolute;
+    }
+
+    #main-navigation .huge-sub-menu.open-menu{
+        display: block;
     }
 
     #main-navigation .huge-sub-menu-item a {
