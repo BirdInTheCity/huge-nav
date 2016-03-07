@@ -13,8 +13,8 @@
 
 .feature-headline {
     font-size: 44px;
-    font-family:HUGEAvantGardeBold;
-    font-height: 48px;
+    font-family:HUGEAvantGardeBold, sans-serif;
+    line-height: 48px;
     margin: 50px 0;
 }
 
@@ -33,7 +33,7 @@
         text-align: center;
         font-family:HUGEAvantGardeBold;
         font-size: 120px;
-        font-height: 132px;
+        line-height: 132px;
     }
 
 

@@ -163,6 +163,7 @@
     position: absolute;
     left: 0;
     transition: left 0.5s cubic-bezier(.55,0,.1,1);
+    cursor: pointer;
 }
 
 .vertical-nav.open #nav-button{

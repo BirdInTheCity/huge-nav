@@ -76,6 +76,7 @@ a, a:hover, a:visited {
 p {
     font-size: 14px;
     line-height: 24px;
+    margin-bottom: 24px;
 }
 
 @media only screen and (min-width: 768px) {
@@ -90,9 +91,8 @@ p {
 }
 
 .hide-mobile {
-    display:none !important;
+    display: none;
 }
-
 
 @media only screen and (min-width: 768px) {
 
@@ -102,6 +102,7 @@ p {
     }
 
     .hide-mobile {
-        display: inherit;
+        display: block;
     }
+
 }
