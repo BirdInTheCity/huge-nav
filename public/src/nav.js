@@ -1,9 +1,28 @@
+/**
+ * Nav is a responsive navigation that appears horizontally on Desktop and as a sideNav on mobile.
+ *
+ *
+ * TODO: (If this were a real project) Consult with designers about creating a modified desktop state when desktop menu extends beyond browser width.
+ */
+
+
 (function () {
 
+    /**
+     * Menu is the state holder for the navigation.  It dispatches events when states are changed.
+     * 
+     * selected:  Sets a main menu option (eg About, Careers, etc)  as selected, if it has sub-nodes.
+     * openSidebarNav:  Opens and closes the sidebar nav
+     * isHorizontal:  Used to set and determine whether the nav is horizontal or sidebar.
+     * 
+     */
+    
+    
     var menu = {
         currentSelection: null,
         horizontal: false,
         open: false,
+        numChildren: 0,
         get selected() {
             return this.currentSelection;
         },
@@ -19,12 +38,11 @@
             );
             document.dispatchEvent(event);
         },
-        get openHorizontalNav(){
+        get openSidebarNav(){
             return this.open;
         },
-        set openHorizontalNav(shouldOpen){
+        set openSidebarNav(shouldOpen){
             this.open = shouldOpen;
-            //var shouldAnimate = animate || true;
 
             var event = new CustomEvent(
               'NAV_VERTICAL_STATE_CHANGE',
@@ -56,8 +74,14 @@
     };
 
 
-
-
+    /**
+     * init()
+     *
+     * (called on load)
+     *  Loads the data feed.
+     *  Sets listener for responsive changes
+     *  Builds the nav
+     */
 
 
     function init() {
@@ -83,6 +107,8 @@
         }
 
         getJSON('/api/nav.json').then(function (data) {
+            menu.numChildren = data.items.length;
+
             createMenu(data.items);
             enableVerticalNavButtons();
 
@@ -98,6 +124,14 @@
         });
     }
 
+
+    /**
+     * enableChangeListener()
+     *
+     * listens for NAV_TRANSITION_CHANGE and configures the nav for horizontal & sidebar configs.
+     */
+
+
     function enableChangeListener(){
         var nav = document.getElementById('main-navigation');
         document.addEventListener('NAV_TRANSITION_CHANGE', function(evt){
@@ -111,27 +145,45 @@
             }
 
             menu.selected = null;
-            menu.openHorizontalNav = false;
+            menu.openSidebarNav = false;
         });
     }
+
+
+    /**
+     * enableVerticalNavButtons()
+     *
+     * Enables the open/close functionality for the sidebar
+     */
+
 
     function enableVerticalNavButtons(){
         var openBtn = document.getElementById('nav-button-open');
         if (openBtn){
             openBtn.addEventListener('click', function(){
-                menu.openHorizontalNav = true;
+                menu.openSidebarNav = true;
             });
         }
 
         var closeBtn = document.getElementById('nav-button-close');
         if (closeBtn){
             closeBtn.addEventListener('click', function(){
-                menu.openHorizontalNav = false;
+                menu.openSidebarNav = false;
             });
         }
 
     }
 
+    /**
+     * createMenu()
+     *
+     * @param data - json object to configure the menu
+     *
+     * Creates menu items and appends to DOM
+     * Creates menu mask
+     * Creates huge logo and appends as a li element
+     * Creates and appends copyright code
+     */
 
     function createMenu(data){
         var mainHeader = document.getElementById("main-navigation");
@@ -164,9 +216,16 @@
 
             var copyright = createCopyright();
             menuList.appendChild(copyright);
-
+            repositionCopyright();
         }
     }
+
+    /**
+     * createLogo()
+     *
+     * Creates HUGE logo
+     * @returns {Element} logo
+     */
 
     function createLogo(){
         var div  = document.createElement('div');
@@ -190,6 +249,21 @@
 
         return menuItem;
     }
+
+
+    /**
+     * createMenuItem()
+     *
+     * @param label  - Menu copy
+     * @param url  - Menu link
+     * @param subItems - Array of sub menu items
+     * @returns {Element} - menu item element
+     *
+     * Creates the menu item.
+     * update() is invoked when MENU_ITEM_SELECTED is dispatched
+     * eventHandler() handles menuItems mouse events
+     */
+
 
     function createMenuItem(label, url, subItems){
         var menuItem = document.createElement('li');
@@ -234,6 +308,7 @@
             switch (evt.type){
                 case 'mouseover' :
                     self.classList.add('selected');
+                    // Allows other menu items to open without a click exclusively in the horizontal nav
                     if (menu.selected  && menu.isHorizontal){
                         menu.selected = self;
                     }
@@ -251,7 +326,7 @@
                         menu.selected = self;
                     } else {
                         menu.selected = null;
-                        menu.openHorizontalNav = false;
+                        menu.openSidebarNav = false;
                         gotoLink(menuItem.url);
                     }
                     break;
@@ -265,16 +340,27 @@
 
         document.addEventListener('MENU_ITEM_SELECTED', menuItem.update);
 
-
+        // Add and attach sub menu items
         if (subItems.length){
             var sub = createSubMenu(subItems);
             menuItem.appendChild(sub);
             menuItem.subMenu = sub;
+            menuItem.numChildren = subItems.length;
         }
 
         return menuItem;
 
     }
+
+
+    /**
+     * createChevron()
+     *
+     * @returns {Element}  Chevron
+     *
+     * Creates chevron for sideNav
+     */
+
 
     function createChevron(){
         var div  = document.createElement('div');
@@ -293,6 +379,16 @@
     }
 
 
+    /**
+     * createSubMenu()
+     *
+     * @param subData  json data defining the sub menu
+     * @returns {Element} A 'ul' element contianing the subMenu
+     *
+     *
+     */
+
+
     function createSubMenu(subData){
         if (subData.length){
             var subItemList = document.createElement('ul');
@@ -305,6 +401,19 @@
         }
 
     }
+
+
+    /**
+     * createSubMenuItem()
+     *
+     * @param label  - copy for the menuItem
+     * @param url - link for the menuItem
+     * @returns {Element} - submenu
+     *
+     * Builds element.
+     * Attaches listeners for mouseover / click
+     */
+
 
     function createSubMenuItem (label, url){
         var menuItem = document.createElement('li');
@@ -320,7 +429,7 @@
         });
 
         menuItem.addEventListener('click', function(){
-            menu.openHorizontalNav = false;
+            menu.openSidebarNav = false;
             menu.selected = null;
             event.stopPropagation();
             gotoLink(menuItem.url)
@@ -330,6 +439,15 @@
     }
 
 
+    /**
+     * createMenuLink()
+     *
+     * @param label - Text label
+     * @param url - Url
+     * @returns {Element} An 'a' element with text/link attached
+     *
+     */
+
 
     function createMenuLink(label, url){
         var mLink = document.createElement('a');
@@ -338,14 +456,60 @@
         return mLink;
     }
 
+
+    /**
+     * createCopyright()
+     *
+     * @returns {Element} returns the copyright text for appending to the sideNav
+     */
     function createCopyright(){
         var cr = document.createElement('li');
+        cr.id = 'nav-copyright';
         cr.classList.add('hide-desktop');
         cr.classList.add('copyright');
-        cr.innerText = '© 2014 Huge. All Rights Reserved.';
+
+        var div = document.createElement('div');
+        div.innerText = '© 2014 Huge. All Rights Reserved.';
+
+        cr.appendChild(div);
         return cr;
     }
 
+
+    /**
+     * repositionCopyright()
+     *
+     * Checks the positioning of the sideNav and updates the copyright info accordingly.
+     */
+
+
+    function repositionCopyright(){
+        var cr = document.getElementById('nav-copyright');
+
+        function update(evt){
+            var browserHeight = window.innerHeight
+                || document.documentElement.clientHeight
+                || document.body.clientHeight;
+
+            var totalHeight = menu.numChildren * 48 + 72;
+            if (evt && evt.detail.selected){
+                totalHeight += evt.detail.selected.numChildren * 48;
+            }
+            var result = browserHeight - totalHeight;
+            result = (result < 48) ? 48 : result;
+            cr.style.height = result + 'px';
+        }
+
+        document.addEventListener('MENU_ITEM_SELECTED', update);
+        update();
+    }
+
+
+    /**
+     * createMenuBackground()
+     *
+     * Generates the dark mask that appears when menu options are being edited
+     */
 
 
     function createMenuBackground (){
@@ -361,7 +525,7 @@
 
         bg.addEventListener('click', function(){
             menu.selected = null;
-            menu.openHorizontalNav = false;
+            menu.openSidebarNav = false;
         });
 
 
@@ -394,6 +558,16 @@
             }
         });
     }
+
+
+    /**
+     * gotoLink()
+     *
+     * @param url
+     *
+     * Routes browser to target URL
+     */
+
 
     function gotoLink(url){
         window.location.href = url;

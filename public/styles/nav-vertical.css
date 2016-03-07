@@ -128,11 +128,15 @@
     overflow: hidden;
     background: #fff;
     padding: 0;
+
+}
+
+.vertical-nav .huge-sub-menu {
     max-height: 0;
     transition: max-height 0.75s cubic-bezier(.55,0,.1,1);
 }
 
-.huge-sub-menu.open-menu {
+.vertical-nav .huge-sub-menu.open-menu {
     display: block;
     max-height: 400px;
 }
@@ -201,4 +205,10 @@
     font-size: 12px;
     line-height: 48px;
     padding: 0 24px;
+    transition: height 0.75s cubic-bezier(.55,0,.1,1);
+}
+
+.copyright div {
+    position: absolute;
+    bottom: 0;
 }
