@@ -547,6 +547,15 @@ window.HugeNav = (function(){
 
 
 
+
+
+
+
+
+
+
+
+
 /**
  * Returns a promise with the loaded data
  * @param url
@@ -567,7 +576,7 @@ window.getJSON = function(url) {
         xhr.send();
     });
 };
-/*
+
 
 window.getJSON('/api/nav.json').then(function (data) {
 
@@ -576,6 +585,7 @@ window.getJSON('/api/nav.json').then(function (data) {
 
 
 });
-*/
+
+
 
 
