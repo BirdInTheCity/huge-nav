@@ -74,6 +74,7 @@
     padding: 0;
     background: #fff;
 }
+
 .vertical-nav .huge-menu-item div,
 .vertical-nav .huge-menu-item a{
     display: flex;
@@ -81,6 +82,11 @@
     align-items: center;
     padding: 0 0 0 24px;
     color: #000000;
+}
+
+.vertical-nav .huge-menu-item.selected .anchor {
+    color: #ec008c;
+    background-color: #eeeeee;
 }
 
 

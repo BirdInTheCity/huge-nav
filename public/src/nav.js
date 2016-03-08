@@ -437,6 +437,7 @@ window.HugeNav = (function(){
     function createMenuLink(label, url, enableLink){
         var e = enableLink ? 'a' : 'div';
         var mLink = document.createElement(e);
+        mLink.classList.add('anchor');
         mLink.innerText = label;
         mLink.href = url;
         return mLink;
