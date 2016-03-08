@@ -41,12 +41,13 @@
     background-color: #ffffff;
 }
 
-
+.horizontal-nav .huge-menu-item div,
 .horizontal-nav .huge-menu-item a{
     padding: 0 24px;
     color: #ffffff;
 }
 
+.horizontal-nav .huge-menu-item.selected div,
 .horizontal-nav .huge-menu-item.selected a{
     color: #ec008c;
 }

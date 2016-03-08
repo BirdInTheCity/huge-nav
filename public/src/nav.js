@@ -2,11 +2,13 @@
  * Nav is a responsive navigation that appears horizontally on Desktop and as a sideNav on mobile.
  *
  *
- * TODO: (If this were a real project) Consult with designers about creating a modified desktop state when desktop menu extends beyond browser width.
+ *
  */
 
+window.HugeNav = (function(){
 
-(function () {
+
+
 
     /**
      * Menu is the state holder for the navigation.  It dispatches events when states are changed.
@@ -16,7 +18,7 @@
      * isHorizontal:  Used to set and determine whether the nav is horizontal or sidebar.
      * 
      */
-    
+
     
     var menu = {
         currentSelection: null,
@@ -84,44 +86,23 @@
      */
 
 
-    function init() {
-        function getJSON(url) {
-            return new Promise(function (resolve, reject) {
-                var xhr = new XMLHttpRequest();
-                xhr.open('get', url, true);
-                xhr.responseType = 'json';
-                xhr.onload = function () {
-                    var status = xhr.status;
-                    if (status == 200) {
-                        resolve(xhr.response);
-                    } else {
-                        reject(status);
-                    }
-                };
-                xhr.send();
-            });
-        }
+    function init(data) {
+        var self = this;
 
         function widthChange(mq) {
             menu.isHorizontal = mq.matches;
         }
 
-        getJSON('/api/nav.json').then(function (data) {
-            menu.numChildren = data.items.length;
+        self.menu.numChildren = data.items.length;
 
-            createMenu(data.items);
-            enableVerticalNavButtons();
+        self.createMenu(data.items);
+        self.enableVerticalNavButtons();
+        self.enableChangeListener();
 
-            enableChangeListener();
+        var widthCheck = window.matchMedia("(min-width: 768px)");
+        widthCheck.addListener(widthChange);
+        widthChange(widthCheck);
 
-            var widthCheck = window.matchMedia("(min-width: 768px)");
-            widthCheck.addListener(widthChange);
-            widthChange(widthCheck);
-
-
-        }, function (status) {
-            alert('Ruh-Roh: ' + status);
-        });
     }
 
 
@@ -171,7 +152,6 @@
                 menu.openSidebarNav = false;
             });
         }
-
     }
 
     /**
@@ -185,10 +165,11 @@
      * Creates and appends copyright code
      */
 
+
     function createMenu(data){
         var mainHeader = document.getElementById("main-navigation");
 
-        if (!document.getElementById('huge-nav')){
+        if (!document.getElementById('huge-menu')){
 
             document.addEventListener('NAV_VERTICAL_STATE_CHANGE',function(evt){
                 if (evt.detail.open){
@@ -198,13 +179,16 @@
                 }
             });
 
+            var menuContainer = document.createElement('div');
+            menuContainer.id = 'huge-container';
+
             var menuList = document.createElement('ul');
             menuList.id = 'huge-menu';
 
             createMenuBackground();
 
-
-            mainHeader.appendChild(menuList);
+            menuContainer.appendChild(menuList);
+            mainHeader.appendChild(menuContainer);
 
             var logo = createLogo();
             menuList.appendChild(logo);
@@ -215,8 +199,8 @@
             });
 
             var copyright = createCopyright();
-            menuList.appendChild(copyright);
-            repositionCopyright();
+            menuContainer.appendChild(copyright);
+
         }
     }
 
@@ -270,7 +254,7 @@
 
         menuItem.classList.add('huge-menu-item');
 
-        var link = createMenuLink(label, url);
+        var link = createMenuLink(label, url, !subItems.length);
         if (subItems.length){
             var chevron = createChevron();
             link.appendChild(chevron);
@@ -420,7 +404,7 @@
         menuItem.classList.add('huge-sub-menu-item');
         menuItem.url = url;
 
-        var menuItemLink = createMenuLink(label, url);
+        var menuItemLink = createMenuLink(label, url, true);
         menuItem.appendChild(menuItemLink);
         menuItem.addEventListener('mouseover', function(){
             if (! menu.isHorizontal){
@@ -444,13 +428,15 @@
      *
      * @param label - Text label
      * @param url - Url
+     * @param enableLink - Determines if it should be a div or anchor element
      * @returns {Element} An 'a' element with text/link attached
      *
      */
 
 
-    function createMenuLink(label, url){
-        var mLink = document.createElement('a');
+    function createMenuLink(label, url, enableLink){
+        var e = enableLink ? 'a' : 'div';
+        var mLink = document.createElement(e);
         mLink.innerText = label;
         mLink.href = url;
         return mLink;
@@ -463,45 +449,12 @@
      * @returns {Element} returns the copyright text for appending to the sideNav
      */
     function createCopyright(){
-        var cr = document.createElement('li');
+        var cr = document.createElement('div');
         cr.id = 'nav-copyright';
         cr.classList.add('hide-desktop');
         cr.classList.add('copyright');
-
-        var div = document.createElement('div');
-        div.innerText = '© 2014 Huge. All Rights Reserved.';
-
-        cr.appendChild(div);
+        cr.innerText = '© 2014 Huge. All Rights Reserved.';
         return cr;
-    }
-
-
-    /**
-     * repositionCopyright()
-     *
-     * Checks the positioning of the sideNav and updates the copyright info accordingly.
-     */
-
-
-    function repositionCopyright(){
-        var cr = document.getElementById('nav-copyright');
-
-        function update(evt){
-            var browserHeight = window.innerHeight
-                || document.documentElement.clientHeight
-                || document.body.clientHeight;
-
-            var totalHeight = menu.numChildren * 48 + 72;
-            if (evt && evt.detail.selected){
-                totalHeight += evt.detail.selected.numChildren * 48;
-            }
-            var result = browserHeight - totalHeight;
-            result = (result < 48) ? 48 : result;
-            cr.style.height = result + 'px';
-        }
-
-        document.addEventListener('MENU_ITEM_SELECTED', update);
-        update();
     }
 
 
@@ -569,15 +522,60 @@
      */
 
 
-    function gotoLink(url){
+    function gotoLink(url) {
         window.location.href = url;
     }
 
 
 
+    // Exposing private methods/properties for the sake of unit testing.
 
+    return {
+        menu: menu,
 
-    init();
+        init: init,
+        createMenu: createMenu,
+        createMenuItem: createMenuItem,
+        createSubMenu: createSubMenu,
+        createSubMenuItem: createSubMenuItem,
+        enableChangeListener: enableChangeListener,
+        enableVerticalNavButtons: enableVerticalNavButtons
+    };
 
 
 })();
+
+
+
+/**
+ * Returns a promise with the loaded data
+ * @param url
+ */
+window.getJSON = function(url) {
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', url, true);
+        xhr.responseType = 'json';
+        xhr.onload = function () {
+            var status = xhr.status;
+            if (status == 200) {
+                resolve(xhr.response);
+            } else {
+                reject(status);
+            }
+        };
+        xhr.send();
+    });
+};
+/*
+
+window.getJSON('/api/nav.json').then(function (data) {
+
+    // Initiates the Nav
+    window.HugeNav.init(data);
+
+
+});
+*/
+
+
